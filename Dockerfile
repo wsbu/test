@@ -12,12 +12,19 @@ RUN apt-get update && apt-get install --yes --no-install-recommends \
 RUN ln -sf /usr/bin/lua5.3 /usr/bin/lua
 
 RUN git clone https://github.com/google/googletest.git /googletest && \
-  mkdir /googletest/bin && \
-  cd /googletest/bin && \
+  mkdir /googletest/build && \
+  cd /googletest/build && \
   cmake .. && \
   make install && \
   cd - && \
-  rm --recursive --force /googletest
+  rm --recursive --force /googletest/build
+
+ENV GMOCK_DIR /googletest/googlemock
+ENV GTEST_DIR /googletest/googletest
+
+RUN apt-get update && apt-get install --yes --no-install-recommends \
+  python \
+  && rm --recursive --force /var/lib/apt/lists/*
 
 RUN apt-get purge --yes \
   ca-certificates \
